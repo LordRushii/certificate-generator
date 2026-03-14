@@ -8,13 +8,23 @@
  * @module
  */
 
+import type * as certificates from "../certificates.js";
+import type * as emails from "../emails.js";
+import type * as events from "../events.js";
+import type * as participants from "../participants.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  certificates: typeof certificates;
+  emails: typeof emails;
+  events: typeof events;
+  participants: typeof participants;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
