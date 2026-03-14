@@ -38,5 +38,6 @@ export default defineSchema({
       v.literal("sent"),
       v.literal("failed")
     ),
+    emailError: v.optional(v.string()),
   }).index("by_event", ["eventId"]),
 });

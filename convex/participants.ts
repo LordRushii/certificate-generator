@@ -79,9 +79,13 @@ export const updateParticipantEmailStatus = mutation({
       v.literal("sent"),
       v.literal("failed")
     ),
+    emailError: v.optional(v.string()),
   },
-  handler: async (ctx, { participantId, emailStatus }) => {
-    await ctx.db.patch(participantId, { emailStatus });
+  handler: async (ctx, { participantId, emailStatus, emailError }) => {
+    await ctx.db.patch(participantId, {
+      emailStatus,
+      emailError: emailStatus === "failed" ? emailError : undefined,
+    });
   },
 });
 

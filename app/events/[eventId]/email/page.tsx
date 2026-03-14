@@ -162,7 +162,15 @@ export default function EmailPage({ params }: EmailPageProps) {
                       )}
                     </TableCell>
                     <TableCell>
-                      <EmailStatusBadge status={participant.emailStatus} />
+                      <div className="flex flex-col gap-1">
+                        <EmailStatusBadge status={participant.emailStatus} />
+                        {participant.emailStatus === "failed" &&
+                          participant.emailError && (
+                            <span className="text-xs text-red-600 dark:text-red-400 max-w-xs truncate" title={participant.emailError}>
+                              {participant.emailError}
+                            </span>
+                          )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

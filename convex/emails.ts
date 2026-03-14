@@ -9,9 +9,8 @@ export const sendCertificateEmails = action({
   args: { eventId: v.id("events") },
   handler: async (ctx, { eventId }) => {
     const resendKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL;
     if (!resendKey) throw new Error("RESEND_API_KEY is not configured");
-    if (!fromEmail) throw new Error("RESEND_FROM_EMAIL is not configured");
+    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
     const resend = new Resend(resendKey);
 
@@ -58,10 +57,13 @@ export const sendCertificateEmails = action({
           participantId: participant._id,
           emailStatus: "sent",
         });
-      } catch {
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        console.error(`Email failed for ${participant.email}: ${message}`);
         await ctx.runMutation(api.participants.updateParticipantEmailStatus, {
           participantId: participant._id,
           emailStatus: "failed",
+          emailError: message,
         });
       }
     }

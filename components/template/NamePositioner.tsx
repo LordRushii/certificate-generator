@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { MousePointerClick } from "lucide-react";
+import { PdfCanvas } from "./PdfCanvas";
 
 export type NamePosition = {
   x: number;
@@ -60,11 +61,34 @@ export function NamePositioner({
 }: NamePositionerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [previewName, setPreviewName] = useState("John Doe");
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [pdfPageWidth, setPdfPageWidth] = useState(0);
 
-  const isImage = templateType === "png" || templateType === "jpg";
-  const computedFontSize = Math.max(8, Math.round(position.fontSize * 0.35));
+  const isPdf = templateType === "pdf";
 
-  const handleImageClick = useCallback(
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    setContainerWidth(el.clientWidth);
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handlePdfDimensions = useCallback((width: number, _height: number) => {
+    setPdfPageWidth(width);
+  }, []);
+
+  const computedFontSize =
+    isPdf && pdfPageWidth > 0 && containerWidth > 0
+      ? Math.max(8, Math.round((containerWidth / pdfPageWidth) * position.fontSize))
+      : Math.max(8, Math.round(position.fontSize * 0.35));
+
+  const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const rect = containerRef.current?.getBoundingClientRect();
       if (!rect) return;
@@ -77,51 +101,33 @@ export function NamePositioner({
 
   return (
     <div className="space-y-4">
-      {isImage ? (
-        <div
-          ref={containerRef}
-          className="relative overflow-hidden rounded-lg border bg-muted cursor-crosshair select-none"
-          onClick={handleImageClick}
-        >
+      <div
+        ref={containerRef}
+        className="relative overflow-hidden rounded-lg border bg-muted cursor-crosshair select-none"
+        onClick={handleClick}
+      >
+        {isPdf ? (
+          <PdfCanvas url={templateUrl} onPageDimensions={handlePdfDimensions} />
+        ) : (
           <img
             src={templateUrl}
             alt="Certificate template"
             className="w-full object-contain"
             draggable={false}
           />
-          <div
-            className="absolute pointer-events-none"
-            style={getNameOverlayStyle(position, computedFontSize)}
-          >
-            {previewName}
-          </div>
-        </div>
-      ) : (
+        )}
         <div
-          ref={containerRef}
-          className="relative overflow-hidden rounded-lg border"
-          style={{ height: 500 }}
+          className="absolute pointer-events-none"
+          style={getNameOverlayStyle(position, computedFontSize)}
         >
-          <iframe
-            src={templateUrl}
-            className="w-full h-full"
-            title="Certificate template PDF"
-          />
-          <div
-            className="absolute pointer-events-none"
-            style={getNameOverlayStyle(position, computedFontSize)}
-          >
-            {previewName}
-          </div>
+          {previewName}
         </div>
-      )}
+      </div>
 
-      {isImage && (
-        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <MousePointerClick className="size-3.5" />
-          Click on the template to set the name position
-        </p>
-      )}
+      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <MousePointerClick className="size-3.5" />
+        Click on the template to set the name position
+      </p>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="space-y-1.5">
