@@ -44,6 +44,7 @@ export function PdfCanvas({ url, onPageDimensions }: PdfCanvasProps) {
     const ctx = canvas.getContext("2d")!;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+    // @ts-expect-error - pdfjs-dist types incorrectly require canvas property in this version
     renderTaskRef.current = page.render({ canvasContext: ctx, viewport });
   }, []);
 

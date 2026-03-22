@@ -1,14 +1,21 @@
-import Link from "next/link";
+import { Navigation } from "@/components/sections/navigation";
+import { Hero } from "@/components/sections/hero";
+import { InteractiveDemo } from "@/components/sections/interactive-demo";
+import { Features } from "@/components/sections/features";
+import { Testimonials } from "@/components/sections/testimonials";
+import { Contact } from "@/components/sections/contact";
+import { Footer } from "@/components/sections/footer";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <Link
-        href="/events"
-        className="rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-      >
-        Get Started
-      </Link>
-    </main>
+    <div className="relative flex flex-col min-h-screen bg-background font-sans overflow-x-hidden">
+      <Navigation />
+      <Hero />
+      <InteractiveDemo />
+      <Features />
+      <Testimonials />
+      <Contact />
+      <Footer />
+    </div>
   );
 }

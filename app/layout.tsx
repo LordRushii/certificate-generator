@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Syne, Manrope } from "next/font/google";
 import "./globals.css";
 import ConvexClientProvider from "@/components/ui/convex-client-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { GraduationCap } from "lucide-react";
-import Link from "next/link";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({
+const syne = Syne({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-syne",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
-  title: "Certificate Automation",
-  description: "Generate and send certificates for your events.",
+  title: "CertifyPro | Premium Certificate Automation",
+  description: "Generate and send breathtaking certificates instantly. Elevate your event experience.",
 };
 
 export default function RootLayout({
@@ -22,27 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} min-h-screen flex flex-col antialiased`}
+        className={`${syne.variable} ${manrope.variable} font-sans min-h-screen antialiased selection:bg-primary/30`}
       >
-        <ConvexClientProvider>
-          <header className="border-b bg-card px-4 md:px-6">
-            <div className="mx-auto flex h-14 max-w-6xl items-center">
-              <Link
-                href="/events"
-                className="flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors"
-              >
-                <GraduationCap className="size-5" />
-                CertifyPro
-              </Link>
-            </div>
-          </header>
-          <main className="flex-1 px-4 md:px-6 py-6">
-            <div className="mx-auto max-w-6xl">{children}</div>
-          </main>
-        </ConvexClientProvider>
-        <Toaster richColors />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+          <Toaster richColors />
+        </ThemeProvider>
       </body>
     </html>
   );
