@@ -37,7 +37,12 @@ export function ExcelUploader({ eventId }: ExcelUploaderProps) {
         toast.warning(`${errors.length} row(s) had errors and were skipped.`);
       }
 
-      await upsertParticipants({ eventId, participants: valid });
+      const participantsToInsert = valid.map((p) => ({
+        name: p.name,
+        email: p.email || "",
+      }));
+
+      await upsertParticipants({ eventId, participants: participantsToInsert });
       toast.success(`${valid.length} participants imported.`);
     } catch {
       toast.error("Failed to read file. Make sure it is a valid Excel or CSV file.");
