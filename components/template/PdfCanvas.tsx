@@ -45,7 +45,13 @@ export function PdfCanvas({ url, onPageDimensions }: PdfCanvasProps) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // @ts-expect-error - pdfjs-dist types incorrectly require canvas property in this version
-    renderTaskRef.current = page.render({ canvasContext: ctx, viewport });
+    const renderTask = page.render({ canvasContext: ctx, viewport });
+    renderTaskRef.current = renderTask;
+    
+    renderTask.promise.catch((err: any) => {
+      if (err.name === 'RenderingCancelledException') return;
+      console.warn("PDF render error:", err);
+    });
   }, []);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ExcelUploader } from "@/components/participants/ExcelUploader";
 import { ParticipantTable } from "@/components/participants/ParticipantTable";
+import { DownloadAllButton } from "@/components/certificates/DownloadAllButton";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
@@ -56,12 +57,15 @@ export default function ParticipantsPage({ params }: ParticipantsPageProps) {
                 </CardDescription>
               </div>
               {participants.length > 0 && (
-                <Link
-                  href={`/events/${eventId}/template`}
-                  className={cn(buttonVariants(), "gap-1.5")}
-                >
-                  Next: Template <ChevronRight className="size-4" />
-                </Link>
+                <div className="flex items-center gap-3">
+                  <DownloadAllButton participants={participants} eventName="Certificates" />
+                  <Link
+                    href={`/events/${eventId}/template`}
+                    className={cn(buttonVariants(), "gap-1.5")}
+                  >
+                    Next: Template <ChevronRight className="size-4" />
+                  </Link>
+                </div>
               )}
             </div>
           </CardHeader>

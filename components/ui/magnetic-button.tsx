@@ -42,6 +42,7 @@ export const MagneticButton = ({
         "relative rounded-full px-6 py-3 font-medium overflow-hidden group",
         className
       )}
+      suppressHydrationWarning
     >
       <span className="relative z-10">{children}</span>
     </motion.button>

@@ -73,7 +73,7 @@ export function InteractiveDemo() {
                   </div>
                   <h3 className="text-xl font-medium mb-2">Ready to dispatch?</h3>
                   <p className="text-sm text-muted-foreground mb-6">142 attendees found in dataset.</p>
-                  <button onClick={() => setStep(1)} className="px-6 py-2 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors shadow-lg">
+                  <button onClick={() => setStep(1)} className="px-6 py-2 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors shadow-lg" suppressHydrationWarning>
                     Generate & Send All
                   </button>
                 </motion.div>

@@ -4,6 +4,7 @@ import { use } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { GenerateButton } from "@/components/certificates/GenerateButton";
+import { DownloadAllButton } from "@/components/certificates/DownloadAllButton";
 import { GenerationProgress } from "@/components/certificates/GenerationProgress";
 import {
   Card,
@@ -137,8 +138,11 @@ export default function GeneratePage({ params }: GeneratePageProps) {
 
       {participants.length > 0 && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Participants</CardTitle>
+            {generatedCount > 0 && (
+              <DownloadAllButton participants={participants} eventName={event.name} />
+            )}
           </CardHeader>
           <CardContent>
             <ParticipantTable participants={participants} />

@@ -64,6 +64,32 @@ export function ParticipantRow({ participant, index }: ParticipantRowProps) {
     }
   };
 
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!participant.certificateUrl) return;
+
+    try {
+      const response = await fetch(participant.certificateUrl);
+      if (!response.ok) throw new Error("Failed to fetch certificate");
+      const blob = await response.blob();
+      
+      const safeName = participant.name.replace(/[\\/:"*?<>|]/g, "_").trim();
+      const fileName = `${safeName}.pdf`;
+      
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Failed to download certificate", error);
+      toast.error("Failed to download certificate.");
+    }
+  };
+
   return (
     <TableRow>
       <TableCell className="text-muted-foreground text-xs w-8">
@@ -111,16 +137,14 @@ export function ParticipantRow({ participant, index }: ParticipantRowProps) {
       <TableCell>
         <div className="flex items-center gap-1">
           {participant.certificateUrl && (
-            <a
-              href={participant.certificateUrl}
-              download
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={handleDownload}
               className={cn(buttonVariants({ variant: "outline", size: "icon-xs" }))}
               aria-label="Download certificate"
+              title="Download certificate"
             >
               <FileDown className="size-3" />
-            </a>
+            </button>
           )}
           <Button
             size="icon-xs"

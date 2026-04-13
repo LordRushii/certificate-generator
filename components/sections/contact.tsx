@@ -37,6 +37,7 @@ export function Contact() {
               required
               placeholder="Enter your email address" 
               className="flex-1 rounded-full px-6 py-4 bg-white/5 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground/50 text-foreground"
+              suppressHydrationWarning
             />
             <MagneticButton className="bg-primary text-primary-foreground hover:bg-primary/90 py-4 shrink-0 shadow-[0_0_30px_-10px_rgba(255,255,255,0.3)] min-w-[160px]">
               {status === "idle" && "Request Access"}
