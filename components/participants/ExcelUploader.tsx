@@ -15,7 +15,9 @@ type ExcelUploaderProps = {
 
 export function ExcelUploader({ eventId }: ExcelUploaderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [parseErrors, setParseErrors] = useState<{ row: number; message: string }[]>([]);
+  const [parseErrors, setParseErrors] = useState<
+    { row: number; message: string }[]
+  >([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const upsertParticipants = useMutation(api.participants.upsertParticipants);
 
@@ -27,7 +29,9 @@ export function ExcelUploader({ eventId }: ExcelUploaderProps) {
       const { valid, errors } = parseParticipantsExcel(buffer);
 
       if (valid.length === 0) {
-        toast.error("No valid participants found. Check that your file has Name and Email columns.");
+        toast.error(
+          "No valid participants found. Make sure your file has a column with participant names.",
+        );
         setParseErrors(errors);
         return;
       }
@@ -45,7 +49,9 @@ export function ExcelUploader({ eventId }: ExcelUploaderProps) {
       await upsertParticipants({ eventId, participants: participantsToInsert });
       toast.success(`${valid.length} participants imported.`);
     } catch {
-      toast.error("Failed to read file. Make sure it is a valid Excel or CSV file.");
+      toast.error(
+        "Failed to read file. Make sure it is a valid Excel or CSV file.",
+      );
     } finally {
       setIsLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -75,7 +81,8 @@ export function ExcelUploader({ eventId }: ExcelUploaderProps) {
             {isLoading ? "Importing..." : "Click to upload Excel or CSV"}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            File must have <strong>Name</strong> and <strong>Email</strong> columns
+            Automatically detects <strong>Name</strong> and{" "}
+            <strong>Email</strong> columns
           </p>
         </div>
         <Button

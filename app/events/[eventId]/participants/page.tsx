@@ -6,7 +6,13 @@ import { api } from "@/convex/_generated/api";
 import { ExcelUploader } from "@/components/participants/ExcelUploader";
 import { ParticipantTable } from "@/components/participants/ParticipantTable";
 import { DownloadAllButton } from "@/components/certificates/DownloadAllButton";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -29,9 +35,9 @@ export default function ParticipantsPage({ params }: ParticipantsPageProps) {
         <CardHeader>
           <CardTitle>Upload Participants</CardTitle>
           <CardDescription>
-            Upload an Excel or CSV file with participant names and emails. The
-            file must have <strong>Name</strong> and <strong>Email</strong>{" "}
-            columns.
+            Upload any Excel or CSV file with participant data. The system will
+            automatically detect columns containing <strong>Name</strong> and{" "}
+            <strong>Email</strong> (if available).
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,7 +64,10 @@ export default function ParticipantsPage({ params }: ParticipantsPageProps) {
               </div>
               {participants.length > 0 && (
                 <div className="flex items-center gap-3">
-                  <DownloadAllButton participants={participants} eventName="Certificates" />
+                  <DownloadAllButton
+                    participants={participants}
+                    eventName="Certificates"
+                  />
                   <Link
                     href={`/events/${eventId}/template`}
                     className={cn(buttonVariants(), "gap-1.5")}
